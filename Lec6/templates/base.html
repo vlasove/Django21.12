@@ -1,0 +1,19 @@
+<!--templates/base.html-->
+<html>
+    <head>
+        <title>Blog Application</title>
+    </head>
+    <body>
+        <header>
+            <h1>
+                <a href="{% url 'home' %}">Home Page</a>
+            </h1>
+        </header>
+
+        <div>
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </body>
+</html>

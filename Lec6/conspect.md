@@ -97,3 +97,13 @@ class BlogListView(ListView):
     context_object_name = "posts"
 
 ```
+
+### Шаг 5. Шаблоны
+* Создадим файлы ```templates/base.html``` и ```templates/home.html```
+* Подскажем ```Django``` где искать шаблоны :
+```
+settings.py -> TEMPLATES -> "DIRS" : [os.path.join(BASE_DIR, "templates")],
+```
+* Опишем ```base.html```
+```
+```
