@@ -118,3 +118,32 @@ urlpatterns = [
 
 ### Шаг 9. Убедимся, что все работает
 * ```python manage.py runserver```
+
+### Шаг 10. Добавление второй веб-страницы
+* Создаем шаблон ```templates/about.html```
+```
+<!--templates/about.html-->
+<h1>About Page!</h1>
+<p>This is second web-page!</p>
+```
+
+* Теперь создадим отображение, показывающее этот шаблон ```pages/views.py```:
+```
+.......
+class AboutPageView(TemplateView):
+    template_name = "about.html"
+
+```
+
+* Теперь опишем правило вызова нового отображения: ```pages/urls.py```
+```
+from django.urls import path 
+from .views import HomePageView, AboutPageView
+
+urlpatterns = [
+    path("about/", AboutPageView.as_view()),
+    path("", HomePageView.as_view()),
+]
+```
+
+* Проверим, что все работает : ```python manage.py runserver```
