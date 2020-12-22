@@ -60,3 +60,40 @@ from .models import Post
 admin.site.register(Post)
 ```
 * Зайдем в панель админа и создадим 3-4 поста.
+
+
+### Шаг 4. Связываем запросы и отображения
+* На уровне проекта ```project/urls.py```
+```
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("", include("blog.urls")),
+]
+
+```
+* На уровне приложения ```blog/urls.py```:
+```
+from django.urls import path
+from .views import BlogListView
+
+urlpatterns = [
+    path("", BlogListView.as_view(), name="home"),
+]
+```
+
+* На уровне ```blog/views.py```:
+```
+from django.shortcuts import render
+from django.views.generic import ListView 
+from .models import Post 
+# Create your views here.
+
+class BlogListView(ListView):
+    model = Post 
+    template_name = "home.html"
+    context_object_name = "posts"
+
+```
