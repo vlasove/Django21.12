@@ -147,3 +147,37 @@ urlpatterns = [
 ```
 
 * Проверим, что все работает : ```python manage.py runserver```
+
+
+### Шаг 11. Простейшее наследование шаблонов
+* Создадим базовый шаблон ```templates/base.html```:
+```
+<!--templates/base.html-->
+<header>
+    <a href="/">Home</a> | <a href="/about">About</a>
+</header>
+
+<!--Синтаксис шаблонизатора-->
+{% block conent %}
+{% endblock content %}
+```
+
+*  Теперь унаследуемся от ```base.html``` внутри ```home.html```:
+```
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Home Page!</h1>
+{% endblock content%}
+```
+* Аналогично поступим с ```about.html```
+```
+<!--templates/about.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>About Page!</h1>
+    <p>This is second web-page!</p>
+{% endblock content %}
+```
