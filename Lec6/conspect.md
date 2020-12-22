@@ -145,3 +145,94 @@ settings.py -> TEMPLATES -> "DIRS" : [os.path.join(BASE_DIR, "templates")],
     {% endfor %}
 {% endblock content%}
 ```
+
+### Шаг 6. CSS и стили
+Хотим добавить к нашему проекту немного стилей. Для этого сделаем следующее:
+* Создадим ```static``` директорию
+* Подскажу ```Django``` где искать ```static```-файлы:
+```
+# project/settings.py
+...
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+```
+
+* Создадим файл ```static/css/base.css```
+* И наполним его:
+```
+/* static/css/base.css */
+
+header h1 a {
+    color:red;
+}
+```
+
+* Теперь в ```base.html``` скажем, что мы используем ```static```-файлы:
+```
+<!--templates/base.html-->
+{% load static %}
+
+<html>
+    <head>
+        <title>Blog Application</title>
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>
+                <a href="{% url 'home' %}">Home Page</a>
+            </h1>
+        </header>
+
+        <div>
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </body>
+</html>
+```
+
+### Шаг 7. Индивидуальные страницы для постов
+Для показа информации про индивидуальный пост нам нужно отображение, умеющее показывать индивидуальные элементы. Это отображение называется ```DetailView```.
+```
+#blog/views.py
+class BlogDetailView(DetailView):
+    model = Post 
+    template_name = "detail_post.html"
+    context_object_name = "post"
+
+```
+
+Теперь создадим ```templates/detail_post.html```
+```
+<!--templates/detail_post.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="post-entry">
+        <h2>{{ post.title }}</h2>
+        <p>posted by {{ post.author }}</p>
+        <p>
+            {{ post.body }}
+        </p>
+    </div>
+{% endblock content %}
+```
+
+После чего, опишем отношение между ```url``` запросом и вызовом ```BlogDetailView```
+```
+#blog/urls.py
+from django.urls import path
+from .views import BlogListView, BlogDetailView
+
+urlpatterns = [
+    path("post/<int:pk>/", BlogDetailView.as_view(), name="detail_post"),
+    path("", BlogListView.as_view(), name="home"),
+]
+```
+
+Данная ссылка ```post/<int:pk>/``` обозначет, что она является динамической (имеет параметр) и данный параметр - целочисленный элемент, связанный как ```PrimaryKey``` с объектами модели.
+
+Теперь подправим шаблон ```home.html``` , чтобы нас по ссылкам переносило на разные веб-страницы с постами.
+```
+```
