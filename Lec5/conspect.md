@@ -112,4 +112,64 @@ class Post(models.Model):
 Миграции не подготавливаем потому что ***структура данных не менялась***.
 
 ### Шаг 7. Добавление моделей в шаблоны.
+***Задача:*** вывести все объекты модели ```Post``` в ```html``` шаблон и показать его пользователю.
 
+* Сначала определим правило отображения в файл ```posts/views.py```:
+```
+from django.views.generic import ListView 
+from .models import Post
+
+# Create your views here.
+
+class HomePageView(ListView):
+    model = Post 
+    template_name = "home.html"
+    context_object_name = "posts"
+```
+
+***ListView*** - стандартный способ отображения списком элементов модели.
+```model``` - атрибут класса ```ListView```, отвечает за то- с какой моделью работаем.
+
+* Создадим файл ```templates/home.html```
+* Подскажем ```Django``` где искать шаблоны : ```settings.py``` -> ```TEMPLATES``` -> 
+```
+'DIRS': [os.path.join(BASE_DIR, "templates")],
+```
+
+* Наполним шаблон ```templates/home.html```
+```
+<!--templates/home.html-->
+<h1>My Home Page</h1>
+<ul>
+    <!--Так в Jinja2 обозначается цикл for-->
+    {% for post in posts %}
+        <li>{{ post }}</li> <!--А вот так оформляется вставка элемента-->
+    {% endfor %}
+</ul>
+```
+
+***Замечание*** поле ```context_object_name``` в ```view``` обозначает имя, доступное внутри шаблона, по которому я могу полчать доступ к элементам модели.
+
+* Сопоставим ```url``` запрос с нашим отображением:
+```
+#posts/urls.py
+from django.urls import path 
+from .views import HomePageView
+
+urlpatterns = [
+    path("", HomePageView.as_view(), name="home"),
+]
+```
+
+* Опишем процесс передачи управления проектом приложению ```posts```:
+```
+# project/urls.py
+from django.contrib import admin
+from django.urls import path, include 
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("", include("posts.urls")),
+]
+
+```

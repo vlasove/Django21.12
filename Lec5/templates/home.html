@@ -1,0 +1,8 @@
+<!--templates/home.html-->
+<h1>My Home Page</h1>
+<ul>
+    <!--Так в Jinja2 обозначается цикл for-->
+    {% for post in posts %}
+        <li>{{ post }}</li> <!--А вот так оформляется вставка элемента-->
+    {% endfor %}
+</ul>
