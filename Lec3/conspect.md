@@ -181,3 +181,29 @@ urlpatterns = [
     <p>This is second web-page!</p>
 {% endblock content %}
 ```
+
+### Шаг 12. Никнеймы запросов
+***Проблема*** - если в шаблонах хардкодить ```url```- ссылки, то при их изменении получится, что большинство шаблонов проекта придет в негодность (их нужно будет вручную переписывать).
+
+***Решение*** - используем никнеймы для ```url```- запросов .
+
+* Заходим в ```pgaes/urls.py```:
+```
+...
+urlpatterns = [
+    path("about/", AboutPageView.as_view(), name="about"),
+    path("", HomePageView.as_view(), name="home"),
+]
+```
+
+* Возвращаемся в ```templates/base.html```:
+```
+<!--templates/base.html-->
+<header>
+    <a href="{% url 'home' %}">Home</a> | <a href="{% url 'about' %}">About</a>
+</header>
+
+<!--Синтаксис шаблонизатора-->
+{% block content %}
+{% endblock content %}
+```
