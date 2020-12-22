@@ -106,4 +106,42 @@ settings.py -> TEMPLATES -> "DIRS" : [os.path.join(BASE_DIR, "templates")],
 ```
 * Опишем ```base.html```
 ```
+<!--templates/base.html-->
+<html>
+    <head>
+        <title>Blog Application</title>
+    </head>
+    <body>
+        <header>
+            <h1>
+                <a href="{% url 'home' %}">Home Page</a>
+            </h1>
+        </header>
+
+        <div>
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </body>
+</html>
+```
+
+* Опишем ```home.html```:
+```
+<!--templates/home.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class = "post-entry">
+            <h2>
+                <a href="">{{ post.title }}</a>
+            </h2>
+            <p>
+                {{ post.body }}
+            </p>
+        </div>
+    {% endfor %}
+{% endblock content%}
 ```
