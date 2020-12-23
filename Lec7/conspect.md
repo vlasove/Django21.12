@@ -152,3 +152,54 @@ urlpatterns = [
 ```
 
 * Проверим, что все работает : ```python manage.py runserver```
+
+### Шаг 8. Форма удаления поста
+* Заходим в шаблон ```detail_post.html```:
+```
+    </div>
+    
+    <a href="{% url 'update_post' post.pk %}">+ Update Post</a>
+    |
+    <a href="{% url 'delete_post' post.pk %}">- Delte Post</a>
+{% endblock content %}
+```
+* Создадим шаблон для удаления поста ```templates/delete_post.html```:
+```
+<!--templates/delete_post.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Delete this Post</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <p>Are you sure you want to delete this post></p>
+        <input type="submit" value="Confirm"/>
+    </form>
+{% endblock content %}
+```
+
+* Создадим новое отображение ```DeleteView```. При создании и обновлении постов мы редиректим клиента на детальное отображение (это работает модельный метод ```get_absolute_url```). Но в случае удаления поста - детального отображения никакого показать не получится, поэтому рекомендуется установить редирект на уровне отображения, чтобы перебрасывать людей на домашнюю страницу. Но перебрасывать нужно только после того, как клиент сделать все действия на странице!
+```
+from django.views.generic import ListView , DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+.....
+class BlogFeleteView(DeleteView):
+    model = Post 
+    template_name = "delete_post.html"
+    success_url = reverse_lazy("home")
+```
+
+* Создадим новую пару ```url-отображение```. Для этого перейдем в ```blog/urls.py```:
+```
+from django.urls import path
+from .views import BlogListView, BlogDetailView, BlogCreateView, BlogUpdateView,BlogDeleteView
+
+urlpatterns = [
+    path("post/<int:pk>/delete/", BlogDeleteView.as_view(), name = "delete_post"),
+    path("post/<int:pk>/update/", BlogUpdateView.as_view(), name="update_post"),
+    path("post/new/", BlogCreateView.as_view(), name = "new_post"),
+    path("post/<int:pk>/", BlogDetailView.as_view(), name="detail_post"),
+    path("", BlogListView.as_view(), name="home"),
+]
+```
