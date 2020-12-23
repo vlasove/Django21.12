@@ -203,3 +203,9 @@ urlpatterns = [
     path("", BlogListView.as_view(), name="home"),
 ]
 ```
+
+### Шаг 9. Итоги
+Как итог, был реализован базовый функционал любой модели : ```CrUD``` :
+* ```Cr``` - ***Create***
+* ```U``` - ***Update***
+* ```D``` - ***Delete***
