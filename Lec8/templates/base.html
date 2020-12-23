@@ -1,0 +1,36 @@
+<!--templates/base.html-->
+{% load static %}
+
+<html>
+    <head>
+        <title>Blog Application</title>
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>
+                <a href="{% url 'home' %}">Home Page</a>
+                 |
+                <a href="{% url 'new_post' %}">+ New Blog Post</a> 
+            </h1>
+        </header>
+        <!--Тут будет про логин-->
+        {% if user.is_authenticated %}
+            <p>Hi, {{ user.username }}. You are loggend in!</p>
+            <a href="{% url 'logout' %}">Log Out</a>
+        {% else %}
+            <p>You are not logged in.</p>
+            <a href="{% url 'login'%}">Log In</a>
+             |
+            <a href ="{% url 'signup' %}">Sign Up</a> 
+        {% endif %}
+
+
+
+        <div>
+            {% block content %}
+            {% endblock content %}
+        </div>
+
+    </body>
+</html>
