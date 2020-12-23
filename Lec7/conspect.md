@@ -97,3 +97,58 @@ class Post(models.Model):
         """
         return reverse("detail_post", args=[str(self.id)])
 ```
+
+### Шаг 7. Форма для обновления поста
+Расширим реализацию интерфейса взаимодействия с моделью при помощи веб-формы для обновления содержимого поста.
+Для этого:
+* Заходим в ```detail_post.html```:
+```
+.....
+    </div>
+    
+    <a href="{% url 'update_post' post.pk %}">+ Update Post</a>
+{% endblock content %}
+```
+
+* Создадим шаблон для обновления ```templates/update_post.html```:
+```
+<!--templates/update_post.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Update this Post</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update" />
+    </form>
+{% endblock content %}
+```
+
+* Создадим ```UpdateView``` , который будет вызывать шаблон:
+```
+from django.views.generic import UpdateView
+....
+
+class BlogUpdateView(UpdateView):
+    model = Post 
+    template_name = "update_post.html"
+    fields = ['title', 'body'] # поля, которые я хочу обновлять
+```
+
+* Создадим пару ***запрос-отображение***, для этого переходим в ```blog/urls.py```:
+```
+from django.urls import path
+from .views import BlogListView, BlogDetailView, BlogCreateView, BlogUpdateView
+
+urlpatterns = [
+    path("post/<int:pk>/update/", BlogUpdateView.as_view(), name="update_post"),
+
+    
+    path("post/new/", BlogCreateView.as_view(), name = "new_post"),
+    path("post/<int:pk>/", BlogDetailView.as_view(), name="detail_post"),
+    path("", BlogListView.as_view(), name="home"),
+]
+```
+
+* Проверим, что все работает : ```python manage.py runserver```

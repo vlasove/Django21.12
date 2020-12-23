@@ -1,0 +1,11 @@
+<!--templates/update_post.html-->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Update this Post</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update" />
+    </form>
+{% endblock content %}

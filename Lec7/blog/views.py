@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView , DetailView, CreateView
+from django.views.generic import ListView , DetailView, CreateView, UpdateView
 from .models import Post 
 # Create your views here.
 
@@ -17,3 +17,8 @@ class BlogCreateView(CreateView):
     model = Post 
     template_name = "new_post.html"
     fields = '__all__' # какие поля мы будем заполнять в веб-форме
+
+class BlogUpdateView(UpdateView):
+    model = Post 
+    template_name = "update_post.html"
+    fields = ['title', 'body'] # поля, которые я хочу обновлять
