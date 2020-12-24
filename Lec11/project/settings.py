@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig', # Регистрация приложения
     'pages.apps.PagesConfig',
 
+    'crispy_forms', # 3rd party software
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,3 +132,6 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # Куда редиректимся в случае логни/логаут
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Указание поколения фреймворка для адаптера
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

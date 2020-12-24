@@ -177,3 +177,90 @@ crossorigin="anonymous"></script>
 </body>
 </html>
 ```
+
+* Проверим, что все работает (проверить, что все кнопки доступны, что макет меняет расположение блоков в зависимости от разрешения веб-страницы).
+
+
+### Шаг 2. Стилизация кнопок
+***Проблема:*** перейдем на страницу ```login```. Для того, чтобы поменять дизайн отображения кнопки ```Log In``` нам необходимо стилизовать это поле.
+
+* Переходим в шаблон ```templates/registration/login.html```
+* На уровне кнопки исправим ее начинку:
+```
+...
+<button class="btn btn-success ml-2" type="submit">Log In</button>
+```
+* Перейдем обратно на страницу ```/login```
+
+* Сделаем тоже самое для кнопки ```/signup```
+* Переходим в шаблон ```templates/signup.html```
+```
+....
+<button class="btn btn-success ml-2" type="submit">Sign Up</button>
+```
+
+### Шаг 3. Стилизация форм ввода
+* Для того, чтобы стилизовать ***формы ввода*** нам понадобится адаптер для ```Bootstrap```-форм.
+* Данный адаптер называется ***django-crispy-forms*** : ```pipenv install django-crispy-forms```
+* Теперь установим данный адаптер в качестве приложения для нашего проекта. Для этого 
+```
+settings.py -> ISTALLED_APPS = []....
+
+INSTALLED_APPS = [
+    'users.apps.UsersConfig', # Регистрация приложения
+    'pages.apps.PagesConfig',
+
+    'crispy_forms', # 3rd party software
+
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+* Также необходимо в ```settings.py``` указать ***ПОД КАКОЕ ПОКОЛЕНИЕ CSS ФРЕЙМВОРКА*** адаптируем формы:
+```
+#settings.py
+...
+# Указание поколения фреймворка для адаптера
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+```
+
+* Теперь можно переверстать формы. Начнем с формы ```SignUp```. Заходим в шаблон ```tempaltes/signup.html```:
+```
+<!--templates/signup.html-->
+{% extends 'base.html' %}
+
+<!--Указание шаблонизатору, что нужно использовать в данном шаблоне адаптер для форм-->
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Sign Up Page</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <!--Указываем, какие поля адаптируем-->
+        {{ form|crispy }}
+        <button class="btn btn-success ml-2" type="submit">Sign Up</button>
+    </form>
+{% endblock content %}
+```
+
+
+* Теперь адаптируем форму ```login``` : Для этого заходим в ```templates/registration/login.html```
+```
+<!--templates/registration/login.html-->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Log In Page</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-success ml-2" type="submit">Log In</button>
+        </form>
+{% endblock content %}
+```
