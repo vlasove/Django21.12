@@ -112,3 +112,43 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
 ```
+
+### Шаг 3. Запрет на взаимодействие
+Для того, чтобы спровоцировать запрет на взаимодействие воспользуемся стандартным методом ```dispatch()```:
+* если пользователь имеет отношение к объекту - все ок, dispatch() ничего не делает
+* если пользователь не имеет отношения к объекту (но взаимодействует с ним) - dispatch() кидает исключение типа ```PermissionDenied```
+
+Заходим в ```articles/views.py```:
+````
+class ArticleUpdateView(LoginRequiredMixin, UpdateView):
+    model = Article 
+    fields = ("title", "body")
+    template_name = "update_article.html"
+    login_url = 'login'
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Получаем автора СТАТЬИ и сравниваем его с ТЕКУЩИМ ПОЛЬЗОВАТЕЛЕМ, который 
+        выполняет запрос
+        """ 
+        article = self.get_object()
+        if article.author != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+class ArticleDeleteView(LoginRequiredMixin, DeleteView):
+    model = Article
+    template_name = "delete_article.html"
+    success_url = reverse_lazy("list_articles")
+    login_url = 'login'
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Получаем автора СТАТЬИ и сравниваем его с ТЕКУЩИМ ПОЛЬЗОВАТЕЛЕМ, который 
+        выполняет запрос
+        """ 
+        article = self.get_object()
+        if article.author != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+```

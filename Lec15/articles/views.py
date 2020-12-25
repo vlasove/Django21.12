@@ -3,6 +3,8 @@ from django.views.generic import ListView , DetailView, UpdateView, DeleteView, 
 from django.urls import reverse_lazy 
 from .models import Article
 
+from django.core.exceptions import PermissionDenied
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -24,11 +26,31 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "update_article.html"
     login_url = 'login'
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Получаем автора СТАТЬИ и сравниваем его с ТЕКУЩИМ ПОЛЬЗОВАТЕЛЕМ, который 
+        выполняет запрос
+        """ 
+        article = self.get_object()
+        if article.author != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
 class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     model = Article
     template_name = "delete_article.html"
     success_url = reverse_lazy("list_articles")
     login_url = 'login'
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Получаем автора СТАТЬИ и сравниваем его с ТЕКУЩИМ ПОЛЬЗОВАТЕЛЕМ, который 
+        выполняет запрос
+        """ 
+        article = self.get_object()
+        if article.author != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
     
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
