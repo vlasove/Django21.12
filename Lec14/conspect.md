@@ -7,7 +7,7 @@
 
 Хотим прописать, когда проект передает управление приложению ```articles```.
 ```
-# project/settings.py
+# project/urls.py
 
 from django.contrib import admin
 from django.urls import path, include
