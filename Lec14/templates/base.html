@@ -22,7 +22,7 @@ crossorigin="anonymous">
     {% if user.is_authenticated %}
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a href=""> <!--Здесь добавим ссылку на создание поста-->
+          <a href="{% url 'new_article' %}"> <!--Здесь добавим ссылку на создание поста-->
             + New
           </a>
         </li>

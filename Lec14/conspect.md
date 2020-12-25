@@ -236,6 +236,68 @@ class ArticleDeleteView(DeleteView):
 ...
 ```
 
-### Шаг8. Запуск и ручные тесты Crud
+### Шаг8. Запуск и ручные тесты CrUD
 * ```python manage.py runserver```
 * Посмотрим, что все работает
+
+
+### Шаг 9. Создание статьи
+Для начала пропишем пару ```url-отображение``` на уровне ```articles/urls.py```:
+```
+urlpatterns = [
+    path("<int:pk>/", ArticleDetailView.as_view(), name="detail_article"), # articles/3/
+    path("<int:pk>/update/", ArticleUpdateView.as_view(), name= "update_article"), # articles/2/update/
+    path("<int:pk>/delete/", ArticleDeleteView.as_view(), name= "delete_article"), 
+    path("new/", ArticleCreateView.as_view(), name="new_article"),
+    path("", ArticleListView.as_view(), name="list_articles"), #
+]
+```
+
+Теперь опишем само отображение:
+```
+class ArticleCreateView(CreateView):
+    model = Article
+    template_name = "new_article.html"
+    fields = ('title', 'body', 'author')
+    
+```
+
+Создадим шаблон ```templates/new_article.html```:
+```
+<!--templates/new_article.html-->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>New Article</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success ml-2" type="submit">Create</button>
+    </form>
+{% endblock content %}
+```
+
+Теперь привяжем это отображение к кнопке ```+ New``` в панели навигации.
+```
+<!--templates/base.html-->
+.......
+    {% if user.is_authenticated %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="{% url 'new_article' %}"> <!--Здесь добавим ссылку на создание поста-->
+            + New
+          </a>
+        </li>
+      </ul>
+    {% endif %}
+....
+```
+
+
+### Шаг 10. Перепишем домашнюю страницу
+Заходим в файл ```templates/home.html``` и создадим там большой блок навигации.
+
+```
+```
